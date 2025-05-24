@@ -17,6 +17,12 @@ interface PasswordInputProps{
 
     }
 
+interface InputProps{
+  contentType:string,
+  label:string,
+
+}
+
 const PasswordInput: React.FC<PasswordInputProps> = ({
   label,
   value,
@@ -43,6 +49,25 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
       {showPassword ? 'Hide' : 'Show'}
     </button>
   </div>
+)
+
+const Input: React.FC<InputProps> =({
+  contentType,
+  label,
+}) =>(
+
+  <div className="mt-8 w-80">
+          <div className='flex row items-center gap-0.5'>
+            <p className="text-sm text-gray-600">{label}</p> <p className='text-red-400'>*</p>
+          </div>
+
+          <input
+            type={contentType}
+            placeholder={label}
+            className="w-full border-b border-gray-300 focus:outline-none focus:border-purple-500 transition duration-200 bg-transparent py-2"
+          />
+    </div>
+
 )
 
 
@@ -86,22 +111,30 @@ const RegisterPage = () => {
 
       {/* Right Side Form */}
       <div className="flex flex-col items-center">
-        <div className="mt-15 font-semibold text-3xl ">
+        <div className="mt-1 font-semibold text-3xl ">
           Sign Up to Scorizon
         </div>
 
-        {/* Email */}
-        <div className="mt-15 w-80">
-          <div className='flex row items-center gap-0.5'>
-            <p className="text-sm text-gray-600">Email</p> <p className='text-red-400'>*</p>
-          </div>
 
-          <input
-            type="text"
-            placeholder="Email"
-            className="w-full border-b border-gray-300 focus:outline-none focus:border-purple-500 transition duration-200 bg-transparent py-2"
-          />
-        </div>
+        {/* First Name*/}
+        <Input
+          contentType='text'
+          label ="First Name"
+        />
+
+        <Input
+          contentType='text'
+          label ="Last Name"
+        />
+
+
+        {/* Email */}
+        <Input
+          contentType='email'
+          label ="Email"
+        />
+
+
 
         {/* Password */}
         <PasswordInput
@@ -122,7 +155,7 @@ const RegisterPage = () => {
         />
 
 
-        {/* Login Button */}
+        {/* Sign Up Button */}
         <div className="mt-10">
           <Link
             href="#"
