@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 
 @Getter
@@ -24,6 +25,9 @@ public class User {
     private String email;
     private String username;
     private String password_hash;
+    
+    @Transient
+    private String password;
 
 
 

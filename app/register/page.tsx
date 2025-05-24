@@ -5,6 +5,8 @@ import login_banner from '../../public/images/login_banner.png'
 import Link from 'next/link'
 import useWindowSize from '@/hooks/useWindowSize'
 import logo from '../../public/images/logo.png'
+import { redirect } from 'next/dist/server/api-utils'
+import { Router, useRouter } from 'next/router'
 
 
 interface PasswordInputProps{
@@ -20,6 +22,7 @@ interface PasswordInputProps{
 interface InputProps{
   contentType:string,
   label:string,
+  onChange:(e:React.ChangeEvent<HTMLInputElement>) =>void,
 
 }
 
@@ -54,6 +57,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
 const Input: React.FC<InputProps> =({
   contentType,
   label,
+  onChange
 }) =>(
 
   <div className="mt-8 w-80">
@@ -64,6 +68,8 @@ const Input: React.FC<InputProps> =({
           <input
             type={contentType}
             placeholder={label}
+            onChange={onChange}
+
             className="w-full border-b border-gray-300 focus:outline-none focus:border-purple-500 transition duration-200 bg-transparent py-2"
           />
     </div>
@@ -80,11 +86,50 @@ const RegisterPage = () => {
 
   const isMobile = width<768;
 
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const[password,setPassword] = useState("");
   const [retypePassword,setRetypePassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false)
   const [showRetypePassword, setShowRetypePassword] = useState(false)
+
+
+  const handleRegister = async () =>{
+
+    const random = Math.floor(Math.random() * 1000) + 1;
+
+    if(password !== retypePassword){
+      alert("passowrds dont match");
+      return;
+    }
+
+    const res = await fetch("http://localhost:8080/api/auth/register", {
+      method:"POST",
+      headers:{"Content-Type" : "application/json"},
+      body: JSON.stringify({
+
+        first_name:firstName,
+        last_name: lastName,
+        email:email,
+        username:firstName+random,
+        password:password
+
+      })
+
+    })
+
+    if (res.ok) {
+      // Registration successful
+      alert("Registration successful! Please log in.");
+      // Optionally redirect to login page
+    } else {
+      // Handle error
+      alert("Registration failed");
+    }
+  }
 
   return (
     <div className={`${!isMobile && "grid grid-cols-2"} min-h-screen`}>
@@ -120,11 +165,13 @@ const RegisterPage = () => {
         <Input
           contentType='text'
           label ="First Name"
+          onChange={(e) => setFirstName(e.target.value)}
         />
 
         <Input
           contentType='text'
           label ="Last Name"
+          onChange={e => setLastName(e.target.value)}
         />
 
 
@@ -132,6 +179,7 @@ const RegisterPage = () => {
         <Input
           contentType='email'
           label ="Email"
+          onChange={e => setEmail(e.target.value)}
         />
 
 
@@ -157,12 +205,12 @@ const RegisterPage = () => {
 
         {/* Sign Up Button */}
         <div className="mt-10">
-          <Link
-            href="#"
+          <button
+            onClick={handleRegister}
             className="rounded-2xl bg-purple-800 p-3 pr-35 pl-35 text-white hover:bg-purple-500 transition-colors duration-300"
           >
             Sign Up
-          </Link>
+          </button>
         </div>
 
         {/* OR Separator */}
