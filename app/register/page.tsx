@@ -6,7 +6,7 @@ import Link from 'next/link'
 import useWindowSize from '@/hooks/useWindowSize'
 import logo from '../../public/images/logo.png'
 import { redirect } from 'next/dist/server/api-utils'
-import { Router, useRouter } from 'next/router'
+import useRouter  from 'next/navigation'
 
 
 interface PasswordInputProps{
@@ -86,6 +86,8 @@ const RegisterPage = () => {
 
   const isMobile = width<768;
 
+  const router = useRouter;
+
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -124,6 +126,7 @@ const RegisterPage = () => {
     if (res.ok) {
       // Registration successful
       alert("Registration successful! Please log in.");
+      router.redirect("login");
       // Optionally redirect to login page
     } else {
       // Handle error
