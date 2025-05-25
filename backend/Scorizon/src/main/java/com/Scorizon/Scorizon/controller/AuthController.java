@@ -1,5 +1,6 @@
 package com.Scorizon.Scorizon.controller;
 
+import com.Scorizon.Scorizon.dto.UserDto;
 import com.Scorizon.Scorizon.entity.User;
 import com.Scorizon.Scorizon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class AuthController {
 
     //register endpoint
     @PostMapping("/register")
-    public User register(@RequestBody User user){
+    public UserDto register(@RequestBody User user){
 
         return userService.register(user);
     }
@@ -29,7 +30,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user){
 
-        User foundUser = userService.login(user.getEmail(),user.getPassword());
+        UserDto foundUser = userService.login(user.getEmail(),user.getPassword());
 
         if(foundUser != null){
             return ResponseEntity.ok(foundUser);

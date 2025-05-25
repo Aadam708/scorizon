@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.Scorizon.Scorizon.dto.UserDto;
 import com.Scorizon.Scorizon.entity.User;
 import com.Scorizon.Scorizon.repository.UserRepository;
 
@@ -14,7 +15,21 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User register(User user){
+
+    public UserDto toDto(User user){
+
+        UserDto dto = new UserDto();
+
+        dto.setUser_id(user.getUser_id());
+        dto.setFirst_name(user.getFirst_name());
+        dto.setLast_name(user.getLast_name());
+        dto.setEmail(user.getEmail());
+        dto.setUsername(user.getUsername());
+
+        return dto;
+    }
+
+    public UserDto register(User user){
 
         //hashing password
 
@@ -24,11 +39,12 @@ public class UserService {
         user.setPassword_hash(password_hash); //storing the hashed password in user
 
         //saves the user into user repository and checks if it exists
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return toDto(savedUser);
 
     }
 
-    public User login(String email, String rawPassword){
+    public UserDto login(String email, String rawPassword){
 
         User user = userRepository.findByEmail(email);
 
@@ -37,7 +53,7 @@ public class UserService {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
             if(encoder.matches(rawPassword, user.getPassword_hash())){
-                return user;
+                return toDto(user);
             }
         }
 
