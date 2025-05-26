@@ -5,7 +5,6 @@ import login_banner from '../../public/images/login_banner.png'
 import Link from 'next/link'
 import useWindowSize from '@/hooks/useWindowSize'
 import logo from '../../public/images/logo.png'
-import { redirect } from 'next/dist/server/api-utils'
 import useRouter  from 'next/navigation'
 
 

@@ -5,64 +5,112 @@ import login_banner from '../../public/images/login_banner.png'
 import Link from 'next/link'
 import useWindowSize from '@/hooks/useWindowSize'
 import logo from '../../public/images/logo.png'
+import  useRouter  from 'next/navigation'
 
 const LoginPage = () => {
 
-  const {height,width} = useWindowSize();
+  //creating userouter
 
+  const router = useRouter;
+
+  //checking the screen size to determine how to render the page
+  const {height,width} = useWindowSize();
   const isMobile = width<768;
+
   const [showPassword, setShowPassword] = useState(false)
+
+
+  const [email,setEmail] = useState("")
+  const[password,setPassword] = useState("");
+
+  const handleLogin = async ()=>{
+
+    const res = await fetch("http://localhost:8080/api/auth/login",{
+      method:"POST",
+      headers:{"Content-Type": "application/json"},
+
+      body:JSON.stringify({
+        email:email,
+        password:password
+      })
+    });
+
+    if(res.ok){
+
+      alert("login success");
+      router.redirect("register")
+      return;
+    }
+    else{
+      alert("invalid credentials");
+    }
+
+  }
 
   return (
     <div className={`${!isMobile && "grid grid-cols-2"} min-h-screen`}>
       {/* Left Side Image */}
-      {!isMobile && <div className='relative h-full'>
-        <Image src={login_banner} alt="login banner" fill className="w-full object-cover" />
+      {!isMobile && (
+        <div className="relative h-full">
+          <Image
+            src={login_banner}
+            alt="login banner"
+            fill
+            className="w-full object-cover"
+          />
 
+          <div className="absolute top-8 left-8">
+            <Image
+              src={logo}
+              alt="logo"
+              width={300}
+              height={300}
+              className="w-40 h-40"
+            />
+          </div>
 
-        <div className="absolute top-8 left-8">
-
-          <Image src={logo} alt="logo" width={300} height={300} className="w-40 h-40" />
-
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-5xl text-white">
+            <p>
+              Predict the
+              <br />
+              Game.
+              <br />
+              Win With <br />
+              every score_
+            </p>
+          </div>
         </div>
-
-
-        <div className='absolute inset-0 flex flex-col items-center justify-center text-5xl text-white'>
-
-            <p>Predict the<br />Game.<br/>Win With <br />every score_</p>
-
-        </div>
-
-      </div>
-      }
+      )}
 
       {/* Right Side Form */}
       <div className="flex flex-col items-center">
-        <div className="mt-25 font-semibold text-3xl">
-          Sign In to Scorizon
-        </div>
+        <div className="mt-25 font-semibold text-3xl">Sign In to Scorizon</div>
 
         {/* Email */}
         <div className="mt-15 w-80">
-          <div className='flex row items-center gap-0.5'>
-            <p className="text-sm text-gray-600">Email</p> <p className='text-red-400'>*</p>
+          <div className="flex row items-center gap-0.5">
+            <p className="text-sm text-gray-600">Email</p>{" "}
+            <p className="text-red-400">*</p>
           </div>
 
           <input
             type="text"
             placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full border-b border-gray-300 focus:outline-none focus:border-purple-500 transition duration-200 bg-transparent py-2"
           />
         </div>
 
         {/* Password */}
         <div className="mt-8 w-80 relative">
-          <div className='flex row items-center gap-0.5'>
-            <p className="text-sm text-gray-600">Password</p> <p className='text-red-400'>*</p>
+          <div className="flex row items-center gap-0.5">
+            <p className="text-sm text-gray-600">Password</p>{" "}
+            <p className="text-red-400">*</p>
           </div>
           <input
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full border-b border-gray-300 focus:outline-none focus:border-purple-500 transition duration-200 bg-transparent py-2 pr-16"
           />
           <button
@@ -70,18 +118,18 @@ const LoginPage = () => {
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-0 top-8 text-sm text-blue-600 hover:underline"
           >
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? "Hide" : "Show"}
           </button>
         </div>
 
         {/* Login Button */}
         <div className="mt-10">
-          <Link
-            href="#"
+          <button
+            onClick={handleLogin}
             className="rounded-2xl bg-purple-800 p-3 pr-35 pl-35 text-white hover:bg-purple-500 transition-colors duration-300"
           >
             Login
-          </Link>
+          </button>
         </div>
 
         {/* OR Separator */}
@@ -101,13 +149,15 @@ const LoginPage = () => {
 
         {/*Dont have an account part */}
 
-        <p className='mt-3 text-sm text-gray-500'>Dont have an account? {' '}
-
-          <Link href='register' className='underline underline-offset-3'>Sign Up</Link>
+        <p className="mt-3 text-sm text-gray-500">
+          Dont have an account?{" "}
+          <Link href="register" className="underline underline-offset-3">
+            Sign Up
+          </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 export default LoginPage
