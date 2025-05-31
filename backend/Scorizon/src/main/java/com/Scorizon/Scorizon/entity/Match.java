@@ -2,13 +2,14 @@ package com.Scorizon.Scorizon.entity;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,11 +24,13 @@ public class Match {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long match_id;
+    @Column(name="match_id")
+    private long matchId;
 
-    @Column(name="league_id")
-    @JsonProperty("league_id")
-    private long leagueId;
+
+    @ManyToOne
+    @JoinColumn(name="league_id", referencedColumnName="league_id")
+    private League league;
 
     @Column(name="home_team")
     private String homeTeam;
@@ -39,10 +42,10 @@ public class Match {
     private String matchStatus;
 
     @Column(name="home_score")
-    private int homeScore;
+    private Integer homeScore;
 
     @Column(name="away_score")
-    private int awayScore;
+    private Integer awayScore;
 
     private boolean archived;
 
