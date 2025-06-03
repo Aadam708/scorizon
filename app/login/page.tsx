@@ -5,13 +5,13 @@ import login_banner from '../../public/images/login_banner.png'
 import Link from 'next/link'
 import useWindowSize from '@/hooks/useWindowSize'
 import logo from '../../public/images/logo.png'
-import  useRouter  from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
 
   //creating userouter
 
-  const router = useRouter;
+  const router = useRouter();
 
   //checking the screen size to determine how to render the page
   const {height,width} = useWindowSize();
@@ -32,13 +32,16 @@ const LoginPage = () => {
       body:JSON.stringify({
         email:email,
         password:password
-      })
+      }),
+      credentials:"include",
     });
 
     if(res.ok){
-
+      const user = await(res.json())
       alert("login success");
-      router.redirect("register")
+      // localStorage.setItem('user', JSON.stringify(user));
+      router.push("/dashboard")
+      console.log(user);
       return;
     }
     else{

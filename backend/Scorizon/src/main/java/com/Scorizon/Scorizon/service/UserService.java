@@ -60,6 +60,11 @@ public class UserService {
         return null;
     }
 
+    public UserDto findByEmail(String email){
+
+        return toDto(userRepository.findByEmail(email));
+    }
+
 
 
 }

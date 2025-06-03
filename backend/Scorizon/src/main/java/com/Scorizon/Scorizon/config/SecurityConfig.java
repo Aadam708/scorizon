@@ -13,22 +13,30 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> {}) // Explicitly enable CORS
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**",  "/api/leagues/**", "/api/matches/**").permitAll() // Allow these
+                .requestMatchers("/api/auth/**",  "/api/leagues/**", "/api/matches/**").permitAll()
                 .anyRequest().authenticated()
             );
         return http.build();
     }
 
-     @Bean
+    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @SuppressWarnings("null")
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*") // Or specify your frontend URL
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+                        .allowedOrigins(
+                            "http://localhost:3000",
+                            "http://127.0.0.1:3000",
+                            "http://localhost:5173"
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowCredentials(true)
+                        .allowedHeaders("*")
+                        .exposedHeaders("Set-Cookie");
             }
         };
     }
