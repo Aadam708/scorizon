@@ -101,6 +101,18 @@ const Dashboard = () => {
 
   },[])
 
+  const handleLogout = async () =>{
+
+    await fetch("http://localhost:8080/api/auth/logout",{
+      method:"POST",
+      credentials:"include",
+    });
+
+    setUser({});
+    //send back to main page
+    router.push("/");
+  }
+
 
   return (
     <div className="min-h-screen">
@@ -131,6 +143,14 @@ const Dashboard = () => {
           Update Matches
         </button>
       )}
+
+      {/* logout button*/ }
+      <button
+          onClick={handleLogout}
+          className=" text-white px-4 py-2 rounded hover:cursor-pointer hover:text-cyan-300 transition-colors transition-duration-100"
+        >
+          Logout
+        </button>
 
     </div>
 

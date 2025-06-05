@@ -4,10 +4,15 @@ import com.Scorizon.Scorizon.dto.UserDto;
 import com.Scorizon.Scorizon.entity.User;
 import com.Scorizon.Scorizon.security.JwtUtil;
 import com.Scorizon.Scorizon.service.UserService;
+
+import jakarta.servlet.http.HttpServletResponse;
+
+import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 
 @RestController
@@ -62,6 +67,21 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login credentials");
     }
+
+    //allowing the user to successfully logout
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        //making a new cookie to set all its values to clear the jwt cookie
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true); // set to true in production
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // Expire immediately
+        response.addCookie(cookie);
+        return ResponseEntity.ok().body("Logged out");
+    }
+
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@CookieValue(name="jwt", required=false) String token){
