@@ -24,6 +24,6 @@ public interface MatchRepository extends JpaRepository<Match,Long> {
 
     public List<Match> findByDatePlayedBetween(LocalDate start, LocalDate end);
 
-    public Match findByApiId(long apiId);
+    public Match findByApiId(Long apiId);
 
 }

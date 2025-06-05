@@ -6,19 +6,77 @@ import logo from '../../public/images/logo.png'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+type Match = {
+  league_id: number;
+  home_team: string;
+  away_team: string;
+  match_status: string;
+  home_score: number | null;
+  away_score: number | null;
+  date_played: string | Date;
+  api_id: number;
+  home_id: number;
+  away_id: number;
+  // add any other fields you expect
+};
 const Dashboard = () => {
 
-  const[user, setUser] = useState<{username?:string}>({});
+  const[user, setUser] = useState<{username?:string, email?:string}>({});
 
   const router = useRouter();
 
+  const handleFetchMatches = async () => {
+    const res = await fetch("/api-scripts/run-fetch-matches", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: "FIFA Club World Cup" }), // Pass league name
+    });
+    const data = await res.json();
+    console.log(data.result || data.error);
+    if (!Array.isArray(data.result) || !data.result.every((m:Match) => m.league_id)) {
+      alert("Error: Some matches are missing league_id!");
+      return;
+    }
+    if(!data.error){
+      saveMatches(data.result)
+
+    }
+  };
+
+  const saveMatches = async (matches: Match[]) => {
+  for (let i=0; i<2;i++) {
+    // Convert string IDs to numbers
+    let match = matches[i]
+    console.log("Raw match object:", match);
+    const fixedMatch = {
+  leagueId: Number(match.league_id),
+  homeTeam: match.home_team,
+  awayTeam: match.away_team,
+  matchStatus: match.match_status,
+  homeScore: match.home_score,
+  awayScore: match.away_score,
+  datePlayed: match.date_played,
+  apiId: Number(match.api_id),
+  homeId: Number(match.home_id),
+  awayId: Number(match.away_id),
+  // add any other fields as needed, mapping camelCase:left to snake_case:right
+};
+    const res = await fetch("http://localhost:8080/api/matches/save", {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(fixedMatch),
+    });
+
+    if (res.ok) {
+      alert("saved matches to db successfully");
+    } else {
+      alert("error saving matches");
+    }
+  }
+};
+
   useEffect(()=>{
 
-    // const stored = localStorage.getItem('user');
-
-    // if(stored){
-    //   setUser(JSON.parse(stored));
-    // }
 
     const fetchUser = async ()=>{
 
@@ -64,6 +122,15 @@ const Dashboard = () => {
       <Link href="predict" className="text-white p-2 hover:text-cyan-300 transform transition-colors transition-duration-100"> Predict</Link>
       <Link href="leaderboard" className="text-white p-2 hover:text-cyan-300 tranfrom transition-colors transition-duration-100"> Leaderboard</Link>
       <Link href="settings" className="text-white p-2 hover:text-cyan-300 tranfrom transition-colors transition-duration-100"> Settings</Link>
+       {/* ...Adding the option fetch matches for admin. */}
+      {user.email === "a@a" && (
+        <button
+          onClick={handleFetchMatches}
+          className=" text-white px-4 py-2 rounded hover:cursor-pointer hover:text-cyan-300 transition-colors transition-duration-100"
+        >
+          Update Matches
+        </button>
+      )}
 
     </div>
 
@@ -71,7 +138,10 @@ const Dashboard = () => {
 
       <h1 className='text-5xl'>Hello, {user.username ? user.username : "Loading..."}!!</h1>
     </div>
-    </div>
+
+
+  </div>
+
   )
 }
 export default Dashboard;

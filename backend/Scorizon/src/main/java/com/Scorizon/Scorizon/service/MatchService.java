@@ -50,7 +50,7 @@ public class MatchService {
         return matchRepository.findByDatePlayedBetween(start, end);
     }
 
-    public Match findByApiId(long apiId){
+    public Match findByApiId(Long apiId){
 
         return matchRepository.findByApiId(apiId);
     }

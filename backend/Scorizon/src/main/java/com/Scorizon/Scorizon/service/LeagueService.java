@@ -1,6 +1,7 @@
 package com.Scorizon.Scorizon.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,10 @@ public class LeagueService {
     public List<League> getAllLeagues(){
 
         return leagueRepository.findAll();
+    }
+
+    public Optional<League> findById(Long leagueId){
+        return leagueRepository.findById(leagueId);
     }
 
 }

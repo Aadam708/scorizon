@@ -56,7 +56,7 @@ public class Match {
     private LocalDate datePlayed;
 
     @Column(name="api_id")
-    private long apiId;
+    private Long apiId;
 
     @Column(name="home_id")
     private long homeId;

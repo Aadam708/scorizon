@@ -18,7 +18,9 @@ public class League {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long league_id;
+    @Column(name = "league_id")
+    @JsonProperty("league_id")
+    private long leagueId;
 
     private String name;
 
