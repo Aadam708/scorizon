@@ -20,7 +20,7 @@ public class UserService {
 
         UserDto dto = new UserDto();
 
-        dto.setUser_id(user.getUser_id());
+        dto.setUser_id(user.getUserId());
         dto.setFirst_name(user.getFirst_name());
         dto.setLast_name(user.getLast_name());
         dto.setEmail(user.getEmail());
