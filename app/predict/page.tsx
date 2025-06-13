@@ -1,9 +1,10 @@
 import React from 'react'
-import Dashboard from '../components/Dashboard'
+import Predict from '../components/Predict'
 
 const page = () => {
+
   return (
-    <Dashboard></Dashboard>
+    <Predict/>
   )
 }
 

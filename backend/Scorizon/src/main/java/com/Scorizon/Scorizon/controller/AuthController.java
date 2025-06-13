@@ -2,6 +2,7 @@ package com.Scorizon.Scorizon.controller;
 
 import com.Scorizon.Scorizon.dto.UserDto;
 import com.Scorizon.Scorizon.entity.User;
+import com.Scorizon.Scorizon.security.CustomUserDetails;
 import com.Scorizon.Scorizon.security.JwtUtil;
 import com.Scorizon.Scorizon.service.UserService;
 
@@ -42,11 +43,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user){
 
-        UserDto foundUser = userService.login(user.getEmail(),user.getPassword());
+        User foundUser = userService.login(user.getEmail(),user.getPassword());
 
         if(foundUser != null){
             //generating a jwt token when a user logs in
-            String jwt = jwtUtil.generateToken(user.getEmail());
+            CustomUserDetails userDetails = new CustomUserDetails(foundUser);
+            String jwt = jwtUtil.generateToken(userDetails);
 
             //building a jwt cookie from the token generated
             ResponseCookie jwtCookie = ResponseCookie.from("jwt",jwt)
@@ -58,12 +60,17 @@ public class AuthController {
                 .build();
 
 
+            //creating a userDto to be returned on client side
+
+            UserDto foundUserDto = userService.toDto(foundUser);
+
+
             //returning a status code ok 200 response
             //including the jwt cookie and also the user object returned
 
             return ResponseEntity.ok()
                 .header("Set-Cookie", jwtCookie.toString())
-                .body(foundUser);
+                .body(foundUserDto);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login credentials");
     }
@@ -89,10 +96,13 @@ public class AuthController {
         if(token == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NO JWT TOKEN");
         }
-
-        String email = jwtUtil.extractEmail(token);
-        UserDto currentUser = userService.findByEmail(email);
-        return ResponseEntity.ok(currentUser);
+ Long userId = jwtUtil.extractUserId(token);
+    User user = userService.findById(userId);
+    if (user == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+    }
+    UserDto currentUser = userService.toDto(user);
+    return ResponseEntity.ok(currentUser);
     }
 
 

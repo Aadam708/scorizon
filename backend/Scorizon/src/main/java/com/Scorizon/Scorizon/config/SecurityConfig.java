@@ -15,8 +15,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> {}) // Explicitly enable CORS
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**",  "/api/leagues/**", "/api/matches/**"
-                                ,"/api/predictions/**").permitAll()
+                .requestMatchers("/api/auth/**", "/api/leagues/**", "/api/matches/**").permitAll()
+    .requestMatchers("/api/predictions/mine").authenticated()
+    .requestMatchers("/api/predictions/**").permitAll()
                 .anyRequest().authenticated()
             );
         return http.build();

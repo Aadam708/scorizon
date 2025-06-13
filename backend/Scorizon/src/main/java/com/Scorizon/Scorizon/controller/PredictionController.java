@@ -2,6 +2,7 @@ package com.Scorizon.Scorizon.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Scorizon.Scorizon.dto.PredictionDto;
+import com.Scorizon.Scorizon.security.JwtUtil;
 import com.Scorizon.Scorizon.service.PredictionService;
 
 @RestController
@@ -17,10 +19,12 @@ import com.Scorizon.Scorizon.service.PredictionService;
 public class PredictionController {
 
     private PredictionService predictionService;
+    private JwtUtil jwtUtil;
 
 
-    public PredictionController(PredictionService predictionService) {
+    public PredictionController(PredictionService predictionService, JwtUtil jwtUtil) {
         this.predictionService = predictionService;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -40,14 +44,16 @@ public class PredictionController {
 
     }
 
-    @GetMapping("/userId={userId}")
-
-    public List<PredictionDto> findByUsername(@PathVariable long userId){
-
-       return predictionService.findByUserId(userId);
-
-
+    @GetMapping("/my")
+    public List<PredictionDto> findMyPredictions(@CookieValue(name = "jwt", required = false) String token) {
+        if (token == null) {
+            throw new RuntimeException("No JWT token found");
+        }
+        Long userId = jwtUtil.extractUserId(token);
+        return predictionService.findByUserId(userId);
     }
+
+
 
 
 

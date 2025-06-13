@@ -44,7 +44,7 @@ public class UserService {
 
     }
 
-    public UserDto login(String email, String rawPassword){
+    public User login(String email, String rawPassword){
 
         User user = userRepository.findByEmail(email);
 
@@ -53,7 +53,7 @@ public class UserService {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
             if(encoder.matches(rawPassword, user.getPassword_hash())){
-                return toDto(user);
+                return user;
             }
         }
 
@@ -63,6 +63,11 @@ public class UserService {
     public UserDto findByEmail(String email){
 
         return toDto(userRepository.findByEmail(email));
+    }
+
+    public User findById(Long id){
+
+        return userRepository.findById(id).orElse(null);
     }
 
 
