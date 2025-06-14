@@ -2,6 +2,8 @@ package com.Scorizon.Scorizon.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,12 +47,14 @@ public class PredictionController {
     }
 
     @GetMapping("/my")
-    public List<PredictionDto> findMyPredictions(@CookieValue(name = "jwt", required = false) String token) {
+    public ResponseEntity<?> findMyPredictions(@CookieValue(name = "jwt", required = false) String token) {
         if (token == null) {
-            throw new RuntimeException("No JWT token found");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("missing the token for authentication");
         }
         Long userId = jwtUtil.extractUserId(token);
-        return predictionService.findByUserId(userId);
+
+
+        return ResponseEntity.ok().body(predictionService.findByUserId(userId));
     }
 
 

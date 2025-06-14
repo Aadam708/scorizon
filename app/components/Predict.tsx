@@ -70,6 +70,7 @@ const Predict = () => {
         headers: { "Content-Type": "application/json" },
         credentials: "include"
       });
+      
       const data = await res.json();
       setUserPredictions(data);
     };

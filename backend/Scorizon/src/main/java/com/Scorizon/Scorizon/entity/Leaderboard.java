@@ -1,5 +1,6 @@
 package com.Scorizon.Scorizon.entity;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -14,10 +15,10 @@ import lombok.Data;
 public class Leaderboard {
 
     @Id
-    @Column(name = "Username")
-    private String userName;
+    @Column(name = "\"Username\"")
+    private String username;
 
-    @Column(name = "Total Points")
+    @Column(name = "\"Total Points\"")
     private long totalPoints;
 
 

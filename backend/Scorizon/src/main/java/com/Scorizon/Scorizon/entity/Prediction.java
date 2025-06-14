@@ -22,6 +22,7 @@ import lombok.Setter;
 public class Prediction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="prediction_id")
     private long predictionId;
 
     @ManyToOne
