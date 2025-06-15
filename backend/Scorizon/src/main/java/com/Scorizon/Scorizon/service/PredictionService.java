@@ -127,6 +127,54 @@ public class PredictionService {
     }
 
 
+    public void updatePointsAwarded(long matchId) {
+
+        Match match = matchRepository.findById(matchId).orElseThrow(()-> new Error("No match exists with this id"));
+        List<Prediction> predictions = predictionRepository.findByMatch_MatchId(matchId);
+
+        for(Prediction p: predictions ){
+
+
+            // 5 points for a correct score exactly
+
+            if(match.getHomeScore() == p.getPredictedHomeScore()
+                && match.getAwayScore() == p.getPredictedAwayScore()){
+
+                    p.setPointsAwarded(5);
+                }
+
+            // 3 points for correct outcome of the result
+
+            else if(match.getHomeScore() > match.getAwayScore()
+            && p.getPredictedHomeScore() > p.getPredictedAwayScore() ){
+
+                p.setPointsAwarded(3);
+
+            }
+
+            else if(match.getAwayScore() > match.getHomeScore()
+            && p.getPredictedAwayScore() > p.getPredictedHomeScore()){
+
+                p.setPointsAwarded(3);
+            }
+
+            else if(match.getAwayScore() == match.getHomeScore()
+            && p.getPredictedAwayScore() == p.getPredictedHomeScore()){
+
+                p.setPointsAwarded(3);
+            }
+
+
+            // 0 points for incorrect score and result
+            else p.setPointsAwarded(0);;
+
+            predictionRepository.save(p);
+        }
+
+
+    }
+
+
 
 
 
