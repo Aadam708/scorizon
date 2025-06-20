@@ -92,10 +92,22 @@ const Dashboard = () => {
 
   }
 
+  //function to update the leaderboard scores
+
+  const updateLeaderboard = async () =>{
+
+    const res = await fetch("http://localhost:8080/api/predictions/update",{
+      method:"PUT",
+      headers:{"Content-Type" : "application/json"},
+    })
+
+    return res;
+  }
+
   //function to save matches
 
   const saveMatches = async (matches: Match[]) => {
-  for (let i=0; i<4;i++) {
+  for (let i=0; i<matches.length;i++) {
     // Convert string IDs to numbers
     let match = matches[i]
     console.log("Raw match object:", match);
@@ -118,7 +130,7 @@ const Dashboard = () => {
     });
 
     if (res.ok) {
-      alert("saved matches to db successfully");
+      console.log("saved matches to db successfully");
     } else {
       alert("error saving matches");
     }
@@ -225,12 +237,25 @@ const Dashboard = () => {
           <Link href="leaderboard" className="text-white p-2 hover:text-cyan-300 transition-colors">Leaderboard</Link>
           <Link href="settings" className="text-white p-2 hover:text-cyan-300 transition-colors">Settings</Link>
           {user.email === "a@a" && (
-            <button
+            <div>
+              <button
               onClick={handleFetchMatches}
               className="text-white px-4 py-2 rounded hover:text-cyan-300 transition-colors"
             >
               Update Matches
             </button>
+
+            <button
+              onClick={updateLeaderboard}
+              className="text-white px-4 py-2 rounded hover:text-cyan-300 transition-colors"
+            >
+              Update Leaderboard
+            </button>
+            </div>
+
+
+
+
           )}
           <button
             onClick={handleLogout}

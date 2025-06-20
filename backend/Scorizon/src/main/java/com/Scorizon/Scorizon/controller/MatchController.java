@@ -120,6 +120,15 @@ public Match saveMatch(@RequestBody MatchDto dto) {
         return all;
     }
 
+    //find match by Id
+
+    @GetMapping("/{id}")
+    public Match findById(@PathVariable long id){
+
+        return matchService.findById(id);
+
+    }
+
     //find matches by league and season or by league only
     @GetMapping
     public List<Match> findByLeagueAndSeason(

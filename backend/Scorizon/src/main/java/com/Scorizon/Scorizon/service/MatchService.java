@@ -64,4 +64,9 @@ public class MatchService {
         return filteredMatches;
     }
 
+    public Match findById(long id) {
+
+        return matchRepository.findById(id).orElseThrow(() -> new Error("No match with id: " + id + " found"));
+    }
+
 }

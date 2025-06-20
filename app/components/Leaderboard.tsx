@@ -10,9 +10,6 @@ const Leaderboard = () => {
 
 
     const[leaderboard, setLeaderboard] = useState<Leaderboard[]>([]);
-
-    
-
     useEffect(() =>{
 
         const loadLeaderBoard = async () =>{

@@ -1,5 +1,6 @@
 package com.Scorizon.Scorizon.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -71,15 +72,16 @@ public class PredictionController {
 
         //find all the finished matches
         List<Match> matches = matchService.findByMatchStatus("finished");
+        List<List<PredictionDto>> predictionDtos = new ArrayList<>();
 
 
         //all predictions involving that match id will need their points awarded to be updated
         for(Match match:matches){
 
-            predictionService.updatePointsAwarded(match.getMatchId());
+            predictionDtos.add(predictionService.updatePointsAwarded(match.getMatchId()));
         }
 
-        return ResponseEntity.ok().body("updated matches");
+        return ResponseEntity.ok().body(predictionDtos);
 
     }
 

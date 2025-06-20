@@ -47,6 +47,7 @@ public class PredictionService {
         dto.setPredictedHomeScore(prediction.getPredictedHomeScore());
         dto.setPredictedAwayScore(prediction.getPredictedAwayScore());
         dto.setPredictedResult(prediction.getPredictedResult());
+        dto.setPointsAwarded(prediction.getPointsAwarded());
         dto.setCreatedAt(prediction.getCreatedAt());
 
         return dto;
@@ -126,8 +127,8 @@ public class PredictionService {
         return toDto(predictions);
     }
 
-
-    public void updatePointsAwarded(long matchId) {
+    @Transactional
+    public List<PredictionDto> updatePointsAwarded(long matchId) {
 
         Match match = matchRepository.findById(matchId).orElseThrow(()-> new Error("No match exists with this id"));
         List<Prediction> predictions = predictionRepository.findByMatch_MatchId(matchId);
@@ -169,9 +170,14 @@ public class PredictionService {
             else p.setPointsAwarded(0);;
 
             predictionRepository.save(p);
+
+
         }
 
+        predictionRepository.flush();
 
+        List<Prediction> updated = predictionRepository.findByMatch_MatchId(matchId);
+        return toDto(updated);
     }
 
 

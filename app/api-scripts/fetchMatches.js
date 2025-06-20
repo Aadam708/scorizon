@@ -53,7 +53,7 @@ const puppeteer = require('puppeteer');
       const formatted = [];
 
 
-      for (let i = 0; i < Math.min(7, data.length); i++) {
+      for (let i = 0; i < 40; i++) {
         const match = data[i];
         const isFinished = match.status.finished;
         const isCancelled = match.status.cancelled;
